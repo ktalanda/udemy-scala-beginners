@@ -3,41 +3,43 @@ package lectures.part2oop
 import scala.runtime.Nothing$
 
 object ListTest extends App {
-  val list = new Cons(1, new Cons(2, new Cons(3, Empty)))
-  println(list.tail)
-  println(list.add(4))
+  val listOfIntegers = new Cons(1, new Cons(2, new Cons(3, Empty)))
+  val listOfStrings = new Cons("hello", new Cons("Scala", new Cons("!!", Empty)))
+  println(listOfIntegers)
+  println(listOfStrings)
+
 }
 
-abstract class MyList {
-  def head: Int
+abstract class MyList[+A] {
+  def head: A
 
-  def tail: MyList
+  def tail: MyList[A]
 
   def isEmpty: Boolean
 
-  def add(element: Int): MyList
+  def add[B >: A](element: B): MyList[B]
 
   def printElements: String
 
   override def toString: String = s"[$printElements]"
 }
 
-object Empty extends MyList {
-  def head: Int = throw new NoSuchElementException
+object Empty extends MyList[Nothing] {
+  def head: Nothing = throw new NoSuchElementException
 
-  def tail: MyList = throw new NoSuchElementException
+  def tail: MyList[Nothing] = throw new NoSuchElementException
 
   def isEmpty: Boolean = true
 
   def printElements: String = ""
 
-  def add(element: Int): MyList = new Cons(element, Empty)
+  def add[B >: Nothing](element: B): MyList[B] = new Cons(element, Empty)
 }
 
-class Cons(h: Int, t: MyList) extends MyList {
-  def head: Int = h
+class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
+  def head: A = h
 
-  def tail: MyList = t
+  def tail: MyList[A] = t
 
   def isEmpty: Boolean = false
 
@@ -45,5 +47,5 @@ class Cons(h: Int, t: MyList) extends MyList {
     if (t.isEmpty) s"$h"
     else s"$h ${t.printElements}"
 
-  def add(element: Int): MyList = new Cons(element, this)
+  def add[B >: A](element: B): MyList[B] = new Cons(element, this)
 }
