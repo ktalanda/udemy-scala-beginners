@@ -1,4 +1,4 @@
-package part3fp
+package lectures.part3fp
 
 object WhatsAFunction extends App {
   val doubler = new MyFunction[Int, Int] {
@@ -20,7 +20,13 @@ object WhatsAFunction extends App {
   }
   println(concat("Hello", " Scala"))
 
-  
+  val superAdder = new (Int => Int => Int) {
+    override def apply(x: Int): Int => Int = (y: Int) => x + y
+  }
+  val adder3 = superAdder(3)
+
+  println(adder3(7))
+  println(superAdder(4)(9))
 }
 
 trait MyFunction[A, B] {
