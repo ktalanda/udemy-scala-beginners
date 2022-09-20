@@ -30,9 +30,31 @@ object HOFsCurries extends App {
   println(add3(10))
 
   def curriedFormatter(c: String)(x: Double): String = c.format(x)
+
   val standardFormat: (Double => String) = curriedFormatter("%4.2f")
   val preciseFormat: (Double => String) = curriedFormatter("%10.8f")
 
   println(standardFormat(Math.PI))
   println(preciseFormat(Math.PI))
+
+  def toCurry[A, B, C](f: (A, B) => C): A => B => C = x => y => f(x, y)
+  def fromCurry[A, B, C](f: A => B => C): (A, B) => C = (x, y) => f(x)(y)
+
+  val test = (x: Int, y: Int) => x + y
+  println(test(1,2))
+  val curriedTest = toCurry(test)
+  println(curriedTest(1)(2))
+  val uncurriedTest = fromCurry(curriedTest)
+  println(uncurriedTest(1,2))
+
+  def compose[A, B, C](f: A => B, g: C => A): C => B = x => f(g(x))
+  def andThen[A, B, C](f: A => B, g: B => C): A => C = x => g(f(x))
+
+  def toString(x: Int): String = x.toString
+  def fromString(x: String): Int = x.toInt
+
+  def doNothingToString = compose(toString, fromString)
+  println(doNothingToString("10"))
+  def doNothingToInt = andThen(toString, fromString)
+  println(doNothingToInt(10))
 }
