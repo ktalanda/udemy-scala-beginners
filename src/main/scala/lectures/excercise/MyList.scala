@@ -1,4 +1,4 @@
-package lectures.part2oop
+package lectures.excercise
 
 import lectures.part2oop.Generics.MyList
 
@@ -21,6 +21,10 @@ object ListTest extends App {
 
   println(anotherListOfIntegers.zipWith(listOfStrings, _ + "-" + _))
   println(listOfIntegers.fold(0)(_+_))
+
+  for {
+    n <- listOfStrings
+  } println(n)
 }
 
 abstract class MyList[+A] {
